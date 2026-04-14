@@ -1,0 +1,355 @@
+# Tidyverse {#CHAPTER-TIDYVERSE}
+
+## Introduction
+
+Programming languages have this in common with natural languages: users continuously develop variants that over time may evolve into new dialects or languages.
+
+In R, there is currently a popular "dialect" called tidyverse [@tidyverse], which has gained widespread acceptance due to its consistency and (relative) simplicity. One of the core concepts of the tidyverse is that all data structures and outputs should consistently be represented as "tidy" data, where each row corresponds to a single observation.
+
+Tidyverse has its own "dataframe", called a "tibble", which is basically a simplified form of a dataframe. We open tidyverse.
+
+```{r}
+#| message: false
+library(tidyverse)
+```
+
+By doing so we actually open multiple packages. Two packages that we will use in particular are:
+
+1.  `dplyr`: to explore and manipulate data [@dplyr]
+2.  `tidyr`: to transform the data format (long to wide and vice versa)[@tidyr].
+
+To make a tibble we also need the library `tibble`. 
+
+```{r}
+library(tibble)                      # <1>
+LangTest <- tribble(                # <2>  
+  ~ID,    ~Pretest, ~Posttest,
+  "S1",  NA,  13,
+  "S2",  13,  14,
+  "S3",  15,  14,
+  "S4",  8,   12
+  )
+LangTest
+```
+
+1.  load the tibble package,
+2.  tribble means we fill the tibble by rows (note the -r- which is not a typo).
+
+To further illustrate the tidyverse approach we use a dataset by Verbeke and Simon [@VerbekeSimonData2023]:
+
+> This dataset contains the results from 33 Flemish English as a Foreign Language (EFL) learners, who were exposed to eight native and non-native accents of English. These participants completed (i) a comprehensibility and accentedness rating task, followed by (ii) an orthographic transcription task. In the first task, listeners were asked to rate eight speakers of English on comprehensibility and accentedness on a nine-point scale (1 = easy to understand/no accent; 9 = hard to understand/strong accent). How Accentedness ratings and listeners' Familiarity with the different accents impacted on their Comprehensibility judgements was measured using a linear mixed-effects model. The orthographic transcription task, then, was used to verify how well listeners actually understood the different accents of English (i.e. intelligibility). To that end, participants' transcription Accuracy was measured as the number of correctly transcribed words and was estimated using a logistic mixed-effects model. Finally, the relation between listeners' self-reported ease of understanding the different speakers (comprehensibility) and their actual understanding of the speakers (intelligibility) was assessed using a linear mixed-effects regression. R code for the data analysis is provided.
+
+We will analyse the comprehensibility data based on the first task, using the file: Listening_to_Accents_Comprehensibility_Accentedness.csv. The codebook provides information for every variable:
+
+The codebook for the datafile (taken from the README file):
+
+-   **ID**: Unique identifier for each line in the dataset.
+-   **Participant**: Unique identifier for each participant.
+-   **Accent**: native and non-native accents of English
+    -   "GBE" = General British English
+    -   "GAE" = General American English
+    -   "NBE" = Northern British English
+    -   "SAE" = Southern American English
+    -   "IndEng" = Indian English
+    -   "NigEng" = Nigerian English
+    -   "ChinEng" = Chinese English
+    -   "SpanEng" = Spanish English
+-   **Comprehensibility**: Listeners' rating of how comprehensible the speaker is on a scale from 1 (= easy to understand) to 9 (= hard to understand)
+-   **Accentedness**: Listeners' rating of how strong a speaker's accent is on a scale from 1 (= no accent) to 9 (= strong accent)
+-   **Familiarity**: Listeners' familiarity with the sampled varieties of English (i.e. never; rarely; sometimes; often; very often)
+
+We open the datafile:
+
+```{r}
+comp <- read.csv("Listening_to_Accents_Comprehensibility_Accentedness.csv", 
+                 stringsAsFactors=TRUE)
+```
+
+And summarize it:
+
+```{r}
+summary(comp)
+```
+
+`Familiarity` is a categorical variable, but its ordering is not correctly interpreted by R:
+
+```{r}
+levels(comp$Familiarity)
+```
+
+```{r}
+str(comp$Familiarity)
+```
+
+We need to indicate that `Familiarity` is an ordered factor:
+
+```{r}
+comp$Familiarity <- factor(comp$Familiarity, 
+                           ordered = TRUE, 
+                           levels = c("Never", 
+                                      "Rarely", 
+                                      "Sometimes",
+                                      "Often",
+                                      "Very Often"))
+```
+
+```{r}
+levels(comp$Familiarity)
+```
+
+```{r}
+str(comp$Familiarity)
+```
+
+
+## Data exploration and manipulation with dplyr
+
+One of the key ideas of the tidyverse approach is to avoid nested functions and to create sequential code, where one function is performed after another. Let's illustrate this idea with a very simple example, calculating an average.
+
+In base-R we would calculate the average with:
+
+```{r}
+mean(comp$Comprehensibility)
+```
+
+In tidyverse we first "activate" the data and in next step we calculate the average:
+
+```{r}
+comp |>                                      # <1>
+  summarise(MEAN = mean(Comprehensibility))  # <2>
+```
+
+1.  Choose the comp-dataframe (this requires that we already have created the comp object),
+2.  apply the summarise function, more specifically we calculate the mean.
+
+The result is a new dataframe, with one variable called "MEAN", which is the name that we created in the code. Here we can see a second key idea of the tidyverse approach. The result is a new dataframe, not a table, not a list, or some other specific data structure. Tidyverse consistently creates new dataframe objects.
+
+We can easily extend the summary dataframe with other descriptive statistics.
+
+```{r}
+comp |>                                                       # <1>
+  summarise(mean = mean(Comprehensibility, na.rm = TRUE),     # <2>
+            median = median(Comprehensibility, na.rm = TRUE), # <2>
+            min = min(Comprehensibility, na.rm = TRUE),       # <2>
+            max = max(Comprehensibility, na.rm = TRUE),       # <2>
+            SD = sd(Comprehensibility, na.rm = TRUE))         # <2>
+```
+
+1.  Choose `comp`,
+2.  Using Summarise we calculate multiple summary statistics.
+
+The result is a dataframe with multiple columns.
+
+`Summarize()` is one of the basic functions in the`dplyr` vocabulary. The other key functions are:
+
+-   `select()` to select columns/variables
+-   `filter()` to select rows
+-   `mutate()` to create new variables
+-   `group_by()` to group the data according to a categorical variable
+
+Let's look at these functions in turn and how they can be combined to manipulate and explore a dataframe.
+
+### group_by()
+
+What is the average Comprehension for the eight different accents?
+
+```{r}
+comp |>                                                      # <1>
+  group_by(Accent) |>                                        # <2>
+  summarise(mean = mean(Comprehensibility, na.rm = TRUE))    # <3>
+```
+
+1.  Choose `comp`,
+2.  Group the data according to `Accent`,
+3.  Calculate the average Comprehensibility (for each group). I added `na.rm = TRUE` just in case there would be NAs.
+
+The result is a tibble (a simplified dataframe) with two variables.
+
+Now let's add some more summary statistics.
+
+```{r}
+comp |>                                                
+  group_by(Accent) |>                                  
+  summarise(mean = mean(Comprehensibility, na.rm = TRUE),         
+            median = median(Comprehensibility, na.rm = TRUE),     
+            min = min(Comprehensibility, na.rm = TRUE),          
+            max = max(Comprehensibility, na.rm = TRUE),           
+            SD = sd(Comprehensibility, na.rm = TRUE))             
+```
+
+We can easily add `Familiarity` as an extra grouping variable (and dropping some summary statistics for the sake of brevity):
+
+```{r}
+comp |>                                               
+  group_by(Accent, Familiarity) |>                   
+  summarise(mean = mean(Comprehensibility, na.rm = TRUE),        
+            SD = sd(Comprehensibility, na.rm = TRUE))            
+```
+
+One might wonder whether this could also be done in base-R. Well, try this:
+
+```{r}
+aggregate(Comprehensibility ~ Accent + Familiarity, 
+          data = comp, 
+          FUN = function(x) c(MEAN = mean(x), SD = sd(x)))
+```
+
+So yes, it can quite easily be done, but the popularity of the `dplyr` approach has cast its shadow on the more "traditional" ways of using R. [^h3_tidyverse-1]
+
+[^h3_tidyverse-1]: For an "opinionated" comparison between tidyverse and base-r, see [TidyverseSkeptic](https://github.com/matloff/TidyverseSkeptic)
+
+### filter() and select()
+
+We select Participants who are familiar with a Spanish English accent (i.e., `Familiarity` equal to "Often" or "Very Often") and check their `Comperehensibility` scores.
+
+```{r}
+comp |>                    
+  filter(Familiarity %in% c("Often", "Very Often")) |>    
+  select(Participant, Comprehensibility) |> 
+  group_by(Participant) |>
+  summarise(mean = mean(Comprehensibility, na.rm = TRUE))
+```
+
+1.  Choose `comp`,
+2.  Select `Participant` and `Comprehensibility`,
+3.  group the data by `Participant`,
+4.  calculate the mean `Comprehensibility` for every `Participant`.
+
+### mutate()
+
+`mutate()` allows you to create new variables. For instance, here we calculate a z-score for `Comprehensibility`.
+
+```{r}
+comp |>                                            
+  mutate(Comprehensibility_z = (Comprehensibility-mean(Comprehensibility))/sd(Comprehensibility)) 
+```
+
+Other important functions from the tidyverse vocabulary include:
+
+-   `drop_na()` to drop missing values
+-   `count()` similar to the `table()` function
+
+I illustrate each in turn using a very simple dataframe
+
+```{r}
+mockdf <- tibble(
+  ID = 1:6,
+  Size = c("a", "a", "a", "b", "b", "b"), 
+  Score = c(23,34,23,NA,27,4),
+  Group = c("first", "second", "second", "second", "first", NA))
+mockdf
+```
+
+Drop the NAs
+
+```{r}
+clean_df <- mockdf |> drop_na()
+clean_df
+```
+
+Count observations for `Group`
+
+```{r}
+mockdf |>  count(Group)
+```
+
+```{r}
+mockdf |> group_by(Group, Size) |> count()
+```
+
+Which is of course similar to:
+
+```{r}
+table(mockdf$Size, mockdf$Group)
+```
+
+Or, if you prefer a dataframe format:
+
+```{r}
+as.data.frame(xtabs(~ Group + Size, data = mockdf))
+```
+
+## Data transformation
+
+Compare the two tables in @tbl-langwijd
+
+::: {#tbl-langwijd layout-ncol="2"}
+| Student | Test     | Score |
+|---------|----------|-------|
+| 1       | pretest  | 8     |
+| 1       | posttest | 12    |
+| 2       | pretest  | 12    |
+| 2       | posttest | 14    |
+| 3       | pretest  | 9     |
+| 3       | posttest | 8     |
+| ...     | ...      | ...   |
+
+: The long data format {#tbl-lang}
+
+| Student | Pretest | Posttest |
+|---------|---------|----------|
+| 1       | 8       | 12       |
+| 2       | 12      | 14       |
+| 3       | 9       | 8        |
+| ...     | ...     | ...      |
+
+: The wide data format {#tbl-wijd}
+
+The long and wide data format
+:::
+
+In the long data format, each observation (each score for both moments) is given its own row, resulting in two rows per student. This format includes a binary categorical variable `Test` and a continuous variable `Score`. In the wide data format, each row represents data for one student. There are two test moments (Pre- and Posttest) displayed separately. This wide format is common in paired and longitudinal data where multiple measurements are taken for one element.
+
+Using the correct data format is crucial for accurate data analysis and visualization. Therefore, being able to switch between these formats without re-entering all data is essential. Of course, you could copy-paste the columns in a spreadsheet, but using code to "pivot" the data is more efficient, in terms of speed and replicability.
+
+To illustrate the data transformation process, we create a small dataframe in the wide format:
+
+```{r}
+df <- data.frame(Student = c(1, 2, 3),
+                 Pretest = c(8, 12, 9),
+                 Posttest = c(12, 14, 8))
+df
+```
+
+We now transform the data to the long format using `pivot_longer()`:
+
+```{r}
+df_long <- df |> 
+  pivot_longer(cols = c(Pretest, Posttest),    # <1>
+               names_to = "Test",              # <2>
+               values_to = "Score")            # <3>
+df_long
+```
+
+1.  Creating a new dataset `df_long`.
+2.  Selecting columns to transform: The `cols` parameter specifies the columns to pivot.
+3.  Naming new variables:
+    -   `Test`: the name of the new variable that will contain the test names ("Pretest" and "Posttest").
+    -   `Score`: the name of the new variable that will contain the scores.
+
+To transform the long dataset back to the wide format use `pivot_wider()`:
+
+```{r}
+df_wide <- df_long |> 
+  pivot_wider(id_cols = Student,      # <1>
+              names_from = Test,      # <2>
+              values_from = Score)    # <3>
+df_wide
+```
+
+1.  Name for the transformed dataset
+2.  Clustering variable: The `id_cols` parameter specifies the variable to cluster values by.
+3.  Variables for new columns: The `names_from` parameter specifies the variable whose categories become new columns, and `values_from` specifies the variable from which the values are taken.
+
+## Exercises
+
+### **Exercise 3.1** {.unnumbered}
+
+Use tidyverse to answer the following questions about the `multitask` dataset.
+
+1.  What is the average `Time` by `Task`?
+2.  Wat are the three fastest international participants? Give the names of the Participants in descending order, starting with the fastest one.
+
+### **Exercise 3.2** {.unnumbered}
+
+1.  Transform the `Multitask` dataset from long to wide data format.

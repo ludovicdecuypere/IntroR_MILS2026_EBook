@@ -1,0 +1,386 @@
+# Data visualisation with ggplot2 {#CHAPTER-GGPLOT2}
+
+For this part we use the `FalseBeginners` dataset. The dataset is based on De Wilde et al. [-@dewilde2019], which is available via: <https://osf.io/ndr47/>. I have selected and renamed the variables for our purposes here. @tbl-falsebeginnerscodebook provides an overview of the variables.
+
+| ID  |    Variable    | Description                                                               |
+|:-------------:|:-------------:|:------------------------------------------|
+|  1  |    Student     | A unique identifier for each student                                      |
+|  2  |     School     | A unique identifier for each school                                       |
+|  3  |     Class      | A unique identifier for each class                                        |
+|  4  |      PPVT      | Score for the Peabody Picture Vocabulary Test (PPVT). Maximum score = 120 |
+|  5  |    Speaking    | Score for the speaking test. Maximum score = 20                           |
+|  6  |   Listening    | Score for the listening test. Maximum score = 25                          |
+|  7  | ReadingWriting | Score for the reading and writing tests. Maximum score = 50               |
+|  8  |    Attitude    | Attitude of student towards English: Positive vs. Negative                |
+|  9  |       L1       | L1: Dutch vs. Multilingual                                                |
+| 10  |      Sex       | Sex of student: Male vs. Female                                           |
+
+: Codebook Falsebeginners {#tbl-falsebeginnerscodebook}
+
+The file is a tab delimited .txt-file. We open the file with `read.delim()`. The dataset is organised in long data format.
+
+```{r}
+#| warning: false
+library(tidyverse)
+```
+
+```{r}
+fb <- read.delim("FalseBeginners.txt",                # <1>
+                 header = TRUE,                       # <2>
+                 na.strings = NA,                     # <3>
+                 stringsAsFactors=TRUE)               # <4>
+```
+
+1.  the text file to open,
+2.  the first row of the file contains the variables names,
+3.  missing values are marked as "NA",
+4.  strings are interpreted as factors.
+
+As always, we start with a global summary.
+
+```{r}
+options(width = 70) 
+summary(fb)
+```
+
+We omit all rows with NAs (this means that a row is dropped as soon as it contains one missing value).
+
+```{r}
+fb <- na.omit(fb)
+```
+
+## Histogram
+
+@fig-H4-hist1 shows a histogram for the vocabulary score `PPVT`.
+
+```{r}
+#| fig-cap: "A histogram of PPVT"
+#| label: fig-H4-hist1
+#| fig-width: 3.5
+#| fig-height: 2.5
+ggplot(data = fb,                 # <2>  
+       mapping =  aes(x=PPVT)) +  # <1>
+       geom_histogram(bins = 25)  # <3>
+```
+
+1.  the dataset that we wish to use. Remember that you need to open this data first. In other words, if the dataframe `fb` does not exist, this code won't work,
+2.  mapping & `aes` indicates the variables for the x- and y-axis (and perhaps other variables for other aesthetics),
+3.  geom is the kind of visualisation that we wish to use.
+
+The key idea in all ggplot figures is to start from a dataframe or tibble object, choose the variables for the x- and y-axis, and choose a geom, the kind of figure for the visualisation.
+
+Extending the basic code with aesthetic features is quite straightforward. In @fig-H4-hist2, we add some color, a label for the x-axis and use a minimalistic theme.
+
+```{r}
+#| fig-cap: "A histogram for PPVT with some additional aesthetics."
+#| label: fig-H4-hist2
+#| fig-width: 3.5
+#| fig-height: 2.5
+ggplot(fb,                                  # <1>
+       aes(x=PPVT)) +                       # <2> 
+  geom_histogram(bins = 25,                 # <3>
+                 fill = "#F1A42B") +        # <4>
+  theme_minimal() +                         # <5>
+  xlab("Score PPVT (120)")                  # <6>
+```
+
+1.  the data,
+2.  the variable that we wish to visualise,
+3.  the visualisation method,
+4.  with a colour,
+5.  a general theme (there are many others available to accomodate everyone's taste),
+6.  a better label for the x-axis.
+
+## Boxplot
+
+The code for the boxplot in @fig-H4-boxplot is very similar to that of the histogram. The only things that we have to change is the use of the y-axis rather than the x-axis and the geom.
+
+```{r}
+#| fig-cap: "A vertical boxplot of PPVT"
+#| label: fig-H4-boxplot
+#| fig-width: 3
+#| fig-height: 3
+
+ggplot(fb,                                 # <1>
+       aes(y=PPVT)) +                      # <2>
+  geom_boxplot() +                         # <3>
+  scale_x_discrete( ) +                    # <4>
+  theme_grey()                             # <5>  
+```
+
+1.  the data,
+2.  the variable for the y-axis (one could also create a horizontal boxplot on the x-axis),
+3.  use a boxplot,
+4.  change the x-axis for a nicer appearance,
+5.  use a grey theme.
+
+## Density curve
+
+We change change the geom and we get the density plot in @fig-H4-dens.
+
+```{r}
+#| fig-cap: "A density curve of PPVT"
+#| label: fig-H4-dens
+#| fig-width: 3.5
+#| fig-height: 2.5
+
+ggplot(fb, aes(x = PPVT)) +  # <1>
+  geom_density()  +          # <2>
+  theme_minimal()
+```
+
+## Barplot
+
+Before we can create a barplot we need to tabulate the data, which we can do with `count()`. Then we select the categorical variable levels on the x-axis and their respective counts on the y-axis, and we get @fig-H4-bar1.
+
+```{r}
+#| fig-cap: "A barplot of Sex."
+#| label: fig-H4-bar1
+#| fig-width: 3.5
+#| fig-height: 2.5
+fb |>                           # <1>
+  count(Sex)  |>                # <2>
+ggplot(aes(x = Sex,             # <3>
+           y = n)) +            # <4>
+  geom_col()                    # <5> 
+```
+
+1.  start with `fb`,
+2.  count the observations for each level of `Sex`,
+3.  use ggplot, put `Sex` on the x-axis and `n` (the result of `count()`) on the y-axis,
+4.  visualise with a barplot ("col" = column).
+
+We can again add some aesthetics to get @fig-H4-bar2
+
+```{r}
+#| fig-cap: "A barplot of Sex with some additional features."
+#| label: fig-H4-bar2
+#| fig-width: 3.5
+#| fig-height: 2.5
+fb |>                           
+  count(Sex)  |>                
+ggplot(aes(x = Sex,             
+           y = n)) +            
+  geom_col(fill = "#1E64C8") +  
+  xlab("Sex")  +           
+  theme_minimal()                
+```
+
+## Overlapping histograms
+
+So far, we have only looked at univariate visualisations. Let's add an extra dimension. We add `Sex` as a categorical variable by means of two different colours, as in @fig-H4-twohist. The alpha argument argument adds transparency to the colours. Note that we use "fill" rather than "colour", because the latter adds colour to the border of the histogram.
+
+```{r}
+#| fig-cap: "PPVT by Sex."
+#| label: fig-H4-twohist
+#| fig-width: 3.5
+#| fig-height: 2.5
+
+ggplot(fb,                                    # <1>
+       aes(x=PPVT,                            # <2>
+           fill = Sex)) +                     # <3>
+  geom_histogram(bins = 20,                   # <4>
+                 position = "identity",       # <5>
+                 alpha = 0.4) +               # <6>
+  theme_classic()                             # <7>
+```
+
+## Overlapping density plots
+
+@fig-H4-twodens shows two overlapping density plots. The code is similar except to the one for the overlapping histograms except for the geom.
+
+```{r}
+#| fig-cap: "PPVT by Sex."
+#| label: fig-H4-twodens
+#| fig-width: 3.5
+#| fig-height: 2.5
+
+ggplot(fb,                                    
+       aes(x=PPVT,                            
+           fill = Sex)) +                     
+  geom_density(position = "identity",       
+                 alpha = 0.4) +             
+  theme_classic()                           
+```
+
+## Multiple boxplots
+
+A clustered boxplot, as in @fig-H4-clusterbox, is created by adding an extra categorical variable on the x-axis. Here we added some extra colour with the `fill` argument.
+
+```{r}
+#| fig-cap: "PPVT by Sex."
+#| label: fig-H4-clusterbox
+#| fig-width: 3.5
+#| fig-height: 2.5
+ggplot(fb, aes(x = Sex,           
+               y = PPVT,            
+               fill = Sex)) +         
+  geom_boxplot() +                
+  theme_minimal() +                
+  theme(legend.position = "none")   # <1>
+```
+
+1.  A legend is created by default for the colours, but this is redundant because of the labels on the x-axis.
+
+## Boxplots with a facet
+
+@fig-H4-boxfacet visualises three variables: the continuous variable `PPVT` by both `Sex` and `L1`. `L1` is here added as a facet.
+
+```{r}
+#| fig-cap: "PPVT by Sex and L1."
+#| label: fig-H4-boxfacet
+#| fig-width: 3.5
+#| fig-height: 2.5
+ggplot(fb, aes(x = Sex,           
+               y = PPVT,            
+               fill = Sex)) +         
+  geom_boxplot() +                
+  theme_minimal() +   
+  facet_wrap(L1 ~ .) +            
+  theme_minimal() + 
+  theme(legend.position = "none") 
+```
+
+@fig-H4-boxfacet2 replaces `L1` by `School`, which conveniently allows us to compare the Sex-differences over the different schools.
+
+```{r}
+#| fig-cap: "PPVT by Sex and School."
+#| label: fig-H4-boxfacet2
+#| fig-width: 12
+#| fig-height: 12
+ggplot(fb, aes(x = Sex,           
+               y = PPVT,            
+               fill = Sex)) +         
+  geom_boxplot() +                
+  theme_minimal() +   
+  facet_wrap( ~ School) +            
+  theme_minimal() + 
+  theme(legend.position = "none") 
+```
+
+The plots suggest that in most schools boys tend to have a higher PPVT than girls.
+
+## Clustered barplot
+
+Is there an association between `Sex` and `Attitude`? We can examine the association between two categorical variables by means of clustered barplots, for which we first need to aggregate the data.
+
+```{r}
+sa <- fb |> count(Sex, Attitude) 
+sa
+```
+
+Then we can use the dataframe to create the barplot in @fig-H4-clustbar.
+
+```{r}
+#| fig-cap: "A clustered barplot of Sex and Attitude"
+#| label: fig-H4-clustbar
+#| fig-width: 4
+#| fig-height: 2
+ggplot(data=sa, aes(x=Sex,             
+                    y=n,               
+                    fill=Attitude)) +  
+  geom_col(position = "dodge") +       
+  theme_minimal()
+```
+
+We can aggregate the attitudes for both Sexes by School and add a facet for `School` to the clustered barplot, as in @fig-H4-clustbarfacet
+
+```{r}
+#| fig-cap: "Attitude by Sex for each School"
+#| label: fig-H4-clustbarfacet
+#| fig-width: 12
+#| fig-height: 12
+ssa <- fb |> group_by(School, Sex) |> count(Attitude)
+ggplot(data=ssa, aes(x=Sex,             
+                    y=n,                
+                    fill=Attitude)) +   
+  geom_col(position = "dodge") +        
+  facet_wrap( ~ School) + 
+  theme_minimal()
+```
+
+Overall, both sexes show a very positive attitude towards English.
+
+## Scatterplot
+
+The scatterplot in @fig-H4-scatter visualises the relation between the scores for `PPVT` and `Speaking`.
+
+```{r}
+#| fig-cap: "A scatterplot of PPVT and Speaking."
+#| label: fig-H4-scatter
+#| fig-width: 3.5
+#| fig-height: 2.5
+
+ggplot(fb, aes(x = PPVT,          
+               y = Speaking)) +   
+  geom_point()   +                
+  theme_minimal()
+```
+
+We can add a regressionline with `geom_smooth()` as in @fig-H4-scatterline.
+
+```{r}
+#| fig-cap: "A scatterplot of PPVT and Speaking with a regression line"
+#| label: fig-H4-scatterline
+#| fig-width: 3.5
+#| fig-height: 2.5
+
+ggplot(fb, aes(x = PPVT,          
+               y = Speaking)) +   
+  geom_point()   +              
+  geom_smooth(method = "lm", col="blue")  +
+  theme_minimal()
+```
+
+Or with a non-parametric smoother, as in @fig-H4-smoother.
+
+```{r}
+#| fig-cap: "A scatterplot of PPVT and Speaking with a smoother."
+#| label: fig-H4-smoother
+#| fig-width: 3.5
+#| fig-height: 2.5
+
+ggplot(fb, aes(x = PPVT,          
+               y = Speaking)) +   
+  geom_point()   +        
+  geom_smooth(method = "loess", col="blue")  +
+  theme_minimal()
+```
+
+And again, it's straightforward to add extra variables a facet, as in @fig-H4-scatterschool:
+
+```{r}
+#| fig-cap: "A scatterplot of PPVT and Speaking, by Sex and L1."
+#| label: fig-H4-scatterschool
+#| fig-width: 6
+#| fig-height: 6
+
+ggplot(fb, aes(x = PPVT,          
+               y = Speaking)) +   
+  geom_point()   +  
+  geom_smooth(method = "loess", col="blue")  +
+  facet_grid(Sex ~ L1) + 
+  theme_minimal()
+```
+
+## Exercises
+
+### **Exercise 4.1** {.unnumbered}
+
+Use the ggplot2 package to create the following visualisations for the `Multitask` dataset:
+
+1.  Create a histogram of `Time`
+2.  Create a boxplot of `Time`
+3.  Create a barplot of `Location`
+
+### **Exercise 4.2** {.unnumbered}
+
+Use the ggplot2 package to create the following visualisations for the `Multitask` dataset:
+
+1.  Visualise `Time` by `Task` as a clustered boxplot
+2.  Visualise `Time` by `Task` and University as overlapping density plots
+3.  Add a vertical line to visualize the mean `Time` for both Tasks.
+4.  Use `ggplot()` to visualise the paired differences in the multitask dataset
+5.  Create a new variable `Difference`, based on the difference in `Time` between the two Tasks.
+6.  Visualise the relation between `Speaking` and `Listening`.
+7.  Visualise the relation between `Speaking` and `Listening` for both Sexes and L1s separately.

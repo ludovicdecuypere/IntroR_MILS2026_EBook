@@ -1,0 +1,39 @@
+# Welcome! {.unnumbered}
+
+Welcome to this introductory course on the R programming language! This course is designed to guide you through the essentials of R with a specific focus on the use of R for statistical data analysis.
+
+This coursebook is the companion text to **Module 1: Introduction to R**, a 15 hour course that I teach at the [Summer School: Methods in Language Science](https://www.mils.ugent.be/) (Ghent University, Belgium). The course covers the following topics:
+
+-   Understanding the difference between R, Rstudio and R notebook
+-   Exploring basic arithmetic and logical operations.
+-   Introduction to essential data structures, including vectors, matrices, and data frames
+-   Importing data files
+-   Manipulating, indexing and pivoting data structures
+-   Generating descriptive statistics and visualisations in base-R
+-   Introduction to the tidyverse approach (incl. ggplot2 visualisations)
+
+This course book is particularly written for language scientists who are new to R and who wish to use R for statistical data analysis. This is not a book about how to use R for the puprose of text analysis, text mining or corpus analysis.
+
+The book is written as a step-by-step guide and may also be of use to linguists who do not attend the summer school. Contact me at [Ludovic.DeCuypere\@UGent.be](Ludovic.DeCuypere@UGent.be) if you want to use the datasets and the solutions to the exercises.
+
+As with any (natural or software) language, you need to start with the basics, before moving on to more complex constructions and patterns. Along the way, you will learn new words (functions, commands and arguments), grammar rules (code syntax), and common phrases (coding patterns).
+
+By the end of this module/book you should grasp the essentials of the R-language and be able to copy-paste and interpret basic R-code. Will you be able to "speak" R? Most probably not. Very few people are fluent R-speakers, by which I mean that they can write R-code from a blank screen. Don't expect to be able to do that, but that's ok. Unless you wish to become a data scientist or statistician, you will only need to copy-paste and tweak existing R-code for your own - linguistically motivated - purposes. And that's what you will be able to do in a few hourse from now.
+
+### Further reading
+
+This book was written on the shoulders of many giants. I recommend the following resources for further reading and study: *R for dummies* by Joris Meys and Adrie De Vries is quintessential R-reading [@deVriesMeys2015]. Norm Matloff's *FasteR* is mandatory study for every R learner (https://faster-site.netlify.app/). *An introduction to R* by the R Core Team [@RCoreTeam2023IntroManual] is a bit technical, but massively rewarding. Crawley's *R book* remains a classic in my personal library [@Crawley2012]. Finally, the *R Graphics Cookbook* (2e) is my goto-resource for data visualisation [@Chang2018].
+
+### Acknowledgements
+
+This book was written in RStudio [@rstudio23] with [Quarto](quarto.org), "a multi-language, next generation version of R Markdown from Posit".
+
+### License
+
+This book licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 4.0 License.
+
+\
+Good luck, and happy coding!
+
+\
+Ludovic De Cuypere

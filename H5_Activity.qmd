@@ -1,0 +1,41 @@
+# Activity: Creating a dataset {#CHAPTER-ACTIVITY}
+
+In this activity, you will conduct a small experiment to investigate whether multitasking has a slowing effect on task performance. The experiment involves two tasks that mimic multitasking behavior (performing tasks simultaneously) and focused behavior (performing tasks in succession). You will then create and format a dataset with the results and learn the difference between long and wide data formats.
+
+### Objectives
+
+-   Understand the impact of multitasking on task performance.
+-   Learn how to measure and record experimental data.
+-   Create and format datasets in long and wide formats.
+-   Gain practical experience in using Excel and R for data management.
+
+### Materials Needed
+
+-   Stopwatch or timer (one per pair of students)
+-   Paper and pen for recording results
+-   Computer with MS Excel installed
+
+### Procedure
+
+One student will perform the two tasks while the other measures and records the time. Swap roles and do the same.
+
+#### Task 1
+
+Write the letters of the word "MULTITASKING" (in capital letters) followed by the numbers 1 to 12, as indicated in @fig-Task-1. Measure the time it takes to write everything down:
+
+![Task 1](Task_1.jpg){#fig-Task-1}
+
+#### Task 2
+
+Write the same capital letters and numbers, but now you write the numbers below the letters, as indicated in @fig-Task-2. So you start with "𝓜", then you write "𝟭", followed by "𝓤" then "𝟮", and so on. Measure the time it takes to write everything down.
+
+![Task 2](Task_2.jpg){#fig-Task-2}
+
+### Question
+
+How do you create a dataset in which we annotate the following information for every participant?
+
+-   Name of the Participant
+-   Time for Task 1 and Task 2
+-   University of the Participant (three levels: UGent, Belgium, International)
+-   ...

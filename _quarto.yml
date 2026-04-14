@@ -1,0 +1,37 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "R for Statistical Data Analysis"
+  subtitle: "A Beginner's Guide for Linguists"
+  author: 
+  - name: Ludovic De Cuypere
+    id: LDC
+    email: Ludovic.DeCuypere@UGent.be
+    affiliation: 
+      - name: Ghent University - Vrije Universiteit Brussel
+  sharing: [twitter, facebook, linkedin]
+  chapters:
+    - index.qmd
+    - H1_Basics.qmd
+    - H2_Dataframe.qmd
+    - H3_Tidyverse.qmd
+    - H4_ggplot2.qmd
+    - H5_Activity.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: [Journal, mystyle_main.scss]
+    mainfont: EB+Garamond
+    toc: true
+    toc-font-size: 0.9rem
+    link-external-icon: true
+    link-external-newwindow: true
+
+execute:
+  freeze: auto
+

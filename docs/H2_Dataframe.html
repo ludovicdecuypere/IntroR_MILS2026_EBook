@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; The dataframe – R for Statistical Data Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./H3_Tidyverse.html" rel="next">
+<link href="./H1_Basics.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-19109c0945e63930d9b3070ed5ef4b77.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./H2_Dataframe.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The dataframe</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">R for Statistical Data Analysis</a> 
+        <div class="sidebar-tools-main">
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+              <i class="bi bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome!</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./H1_Basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">R basics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./H2_Dataframe.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The dataframe</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./H3_Tidyverse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Tidyverse</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./H4_ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data visualisation with ggplot2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./H5_Activity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Activity: Creating a dataset</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#how-to-make-a-dataframe-in-r-example-1" id="toc-how-to-make-a-dataframe-in-r-example-1" class="nav-link active" data-scroll-target="#how-to-make-a-dataframe-in-r-example-1"><span class="header-section-number">2.1</span> How to make a dataframe in R: example 1</a></li>
+  <li><a href="#how-to-make-a-dataframe-in-r-example-2" id="toc-how-to-make-a-dataframe-in-r-example-2" class="nav-link" data-scroll-target="#how-to-make-a-dataframe-in-r-example-2"><span class="header-section-number">2.2</span> How to make a dataframe in R: example 2</a></li>
+  <li><a href="#r-datasets" id="toc-r-datasets" class="nav-link" data-scroll-target="#r-datasets"><span class="header-section-number">2.3</span> R datasets</a></li>
+  <li><a href="#opening-a-text-file-as-a-dataframe" id="toc-opening-a-text-file-as-a-dataframe" class="nav-link" data-scroll-target="#opening-a-text-file-as-a-dataframe"><span class="header-section-number">2.4</span> Opening a Text File as a Dataframe</a></li>
+  <li><a href="#exploring-a-dataframe" id="toc-exploring-a-dataframe" class="nav-link" data-scroll-target="#exploring-a-dataframe"><span class="header-section-number">2.5</span> Exploring a dataframe</a></li>
+  <li><a href="#applying-functions-to-a-variable-from-a-dataframe" id="toc-applying-functions-to-a-variable-from-a-dataframe" class="nav-link" data-scroll-target="#applying-functions-to-a-variable-from-a-dataframe"><span class="header-section-number">2.6</span> Applying functions to a variable from a dataframe</a></li>
+  <li><a href="#selectingsubsetting-data-from-a-dataframe" id="toc-selectingsubsetting-data-from-a-dataframe" class="nav-link" data-scroll-target="#selectingsubsetting-data-from-a-dataframe"><span class="header-section-number">2.7</span> Selecting/subsetting data from a dataframe</a></li>
+  <li><a href="#creating-a-new-variable" id="toc-creating-a-new-variable" class="nav-link" data-scroll-target="#creating-a-new-variable"><span class="header-section-number">2.8</span> Creating a new variable</a></li>
+  <li><a href="#tapply" id="toc-tapply" class="nav-link" data-scroll-target="#tapply"><span class="header-section-number">2.9</span> tapply()</a></li>
+  <li><a href="#save-a-dataframe-as-a-datafile" id="toc-save-a-dataframe-as-a-datafile" class="nav-link" data-scroll-target="#save-a-dataframe-as-a-datafile"><span class="header-section-number">2.10</span> Save a dataframe as a datafile</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">2.11</span> Exercises</a>
+  <ul class="collapse">
+  <li><a href="#exercise-2.1" id="toc-exercise-2.1" class="nav-link" data-scroll-target="#exercise-2.1"><strong>Exercise 2.1</strong></a></li>
+  <li><a href="#exercise-2.2" id="toc-exercise-2.2" class="nav-link" data-scroll-target="#exercise-2.2"><strong>Exercise 2.2</strong></a></li>
+  <li><a href="#exercise-2.3" id="toc-exercise-2.3" class="nav-link" data-scroll-target="#exercise-2.3"><strong>Exercise 2.3</strong></a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="CHAPTER-DATAFRAME" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The dataframe</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>When you collect data by means of an experiment or via observational research, you need to apply the correct dataformat to your data.</p>
+<p>I won’t go into detail about the different dataformats here, but in all likelihood you will shape your data in some kind of spreadsheet format with rows and columns, in which each column represents a variable and with the first row (header) indicating the names of your variables, as in <a href="#tbl-abstract" class="quarto-xref">Table&nbsp;<span>2.1</span></a>:</p>
+<div id="tbl-abstract" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-abstract-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.1: An abstract dataset with rows and columns
+</figcaption>
+<div aria-describedby="tbl-abstract-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Variable</th>
+<th style="text-align: center;">Variable</th>
+<th style="text-align: center;">Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">measurement</td>
+<td style="text-align: center;">measurement</td>
+<td style="text-align: center;">measurement</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">measurement</td>
+<td style="text-align: center;">measurement</td>
+<td style="text-align: center;">measurement</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">measurement</td>
+<td style="text-align: center;">measurement</td>
+<td style="text-align: center;">measurement</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>In R, this kind of object has its own data structure called a “dataframe”. Basically, you “tell” R that the combination of rows and column is one dataset or dataframe.</p>
+<p>To introduce the concept of a dataframe, we will first construct two dataframes by combining vectors of the same type and length into a single dataframe.</p>
+<p>After we have created dataframes in R, we will open an external dataset, which is what you will mostly do. Rarely is a dataframe directly created, except for pedagogical purposes perhaps or to simulate some data or a model.</p>
+<p>Typically, a researcher prepares a dataset in some kind of spreadsheet software like MS Excel or some other specialized software before importing it into R.</p>
+<section id="how-to-make-a-dataframe-in-r-example-1" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="how-to-make-a-dataframe-in-r-example-1"><span class="header-section-number">2.1</span> How to make a dataframe in R: example 1</h2>
+<p><a href="#tbl-freqrt" class="quarto-xref">Table&nbsp;<span>2.2</span></a> represents a simple dataset based on a Lexical Decision Task of 6 rows. In a lexical decision task participants have to decide whether a string of characters is an existing word or a not.</p>
+<div id="tbl-freqrt" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-freqrt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.2: A dataset based on a Lexical Decision Task
+</figcaption>
+<div aria-describedby="tbl-freqrt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Participant</th>
+<th style="text-align: center;">Item</th>
+<th style="text-align: center;">Frequency</th>
+<th style="text-align: center;">ReactionTime</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">a</td>
+<td style="text-align: center;">high</td>
+<td style="text-align: center;">320</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">b</td>
+<td style="text-align: center;">low</td>
+<td style="text-align: center;">380</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">c</td>
+<td style="text-align: center;">low</td>
+<td style="text-align: center;">400</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">d</td>
+<td style="text-align: center;">high</td>
+<td style="text-align: center;">300</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">e</td>
+<td style="text-align: center;">high</td>
+<td style="text-align: center;">356</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">f</td>
+<td style="text-align: center;">low</td>
+<td style="text-align: center;">319</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-codefreqrt" class="quarto-xref">Table&nbsp;<span>2.3</span></a> explains the variables in a codebook (aka codesheet). A codebook documents and explains the variables in the dataset. Every row now represents a single variable. It’s good practice to document your data and R-code so that other researchers (including the future you) can interpret the data.</p>
+<div id="tbl-codefreqrt" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-codefreqrt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.3: Codebook for the dataset based on a lexical decision task
+</figcaption>
+<div aria-describedby="tbl-codefreqrt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 55%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">ID</th>
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Participant</td>
+<td style="text-align: left;">a unique identification number for each participant</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">Item</td>
+<td style="text-align: left;">the word used as a stimulus</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">Frequency</td>
+<td style="text-align: left;">the frequency of the item, a binary categorical variable: “high” vs.&nbsp;“low”</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">Reaction Time</td>
+<td style="text-align: left;">the reaction time (in ms) of the participant to the item</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Let’s create a dataframe for the dataset in <a href="#tbl-freqrt" class="quarto-xref">Table&nbsp;<span>2.2</span></a>. We start by creating every variable (or column) as a separate vector. It doesn’t matter that you write each vector as a row rather than as a column.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-1"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-1" class="code-annotation-target"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a>Participant <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)</span>
+<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a>Item <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span>, <span class="st">"e"</span>, <span class="st">"f"</span>)</span>
+<span id="annotated-cell-1-3"><a href="#annotated-cell-1-3" aria-hidden="true" tabindex="-1"></a>Freq <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">c</span>(<span class="st">"high"</span>, <span class="st">"low"</span>, <span class="st">"low"</span>,</span>
+<span id="annotated-cell-1-4"><a href="#annotated-cell-1-4" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"high"</span>, <span class="st">"high"</span>, <span class="st">"low"</span>))</span>
+<span id="annotated-cell-1-5"><a href="#annotated-cell-1-5" aria-hidden="true" tabindex="-1"></a>RT <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">320</span>, <span class="dv">380</span>, <span class="dv">400</span>, <span class="dv">300</span>, <span class="dv">356</span>, <span class="dv">319</span>)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-6" class="code-annotation-target"><a href="#annotated-cell-1-6" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Participant, Item, Freq, RT)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-1-7" class="code-annotation-target"><a href="#annotated-cell-1-7" aria-hidden="true" tabindex="-1"></a>df</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="1,2,3,4,5" data-code-annotation="1">First we create every variable as separate vectors</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="6" data-code-annotation="2">the vectors are transformed into a dataframe data structure with <code>data.frame()</code></span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="7" data-code-annotation="3">print/look at the dataframe.</span>
+</dd>
+</dl>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Participant Item Freq  RT
+1           1    a high 320
+2           2    b  low 380
+3           3    c  low 400
+4           4    d high 300
+5           5    e high 356
+6           6    f  low 319</code></pre>
+</div>
+</div>
+</section>
+<section id="how-to-make-a-dataframe-in-r-example-2" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="how-to-make-a-dataframe-in-r-example-2"><span class="header-section-number">2.2</span> How to make a dataframe in R: example 2</h2>
+<p>We now simulate an artificial dataset to compare scores (out of 20) between two groups: one group that received a treatment, referred to as “Treat,” and a control group referred to as “Control.” The term “treatment” has a very general interpetation in research methodology and is not limited to a medical intervention. For instance, in the context of educational research, a treatment might involve following a new teaching method. The dataset is structured as in <a href="#tbl-H2-scoredata" class="quarto-xref">Table&nbsp;<span>2.4</span></a>:</p>
+<div id="tbl-H2-scoredata" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-H2-scoredata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.4: A fake dataset with an identifier variable, a categorical variable Group, with two levels (control vs.&nbsp;treat) and a continuous variable Score. The dataset contains three columns/variables and 61 rows - 1 header row with the variable names and 60 rows with the data.
+</figcaption>
+<div aria-describedby="tbl-H2-scoredata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">ID</th>
+<th style="text-align: center;">Group</th>
+<th style="text-align: center;">Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">control</td>
+<td style="text-align: center;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">control</td>
+<td style="text-align: center;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">…</td>
+<td style="text-align: center;">…</td>
+<td style="text-align: center;">…</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">59</td>
+<td style="text-align: center;">treat</td>
+<td style="text-align: center;">12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">60</td>
+<td style="text-align: center;">treat</td>
+<td style="text-align: center;">17</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>We can simulate this artificial dataset as follows:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-2"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-1" class="code-annotation-target"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a>Group <span class="ot">&lt;-</span> <span class="fu">gl</span>(<span class="at">n =</span> <span class="dv">2</span>,</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-2" class="code-annotation-target"><a href="#annotated-cell-2-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">k =</span> <span class="dv">30</span>,</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-2-3" class="code-annotation-target"><a href="#annotated-cell-2-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"treat"</span>))</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-2-4" class="code-annotation-target"><a href="#annotated-cell-2-4" aria-hidden="true" tabindex="-1"></a>Score <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">round</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">30</span>, <span class="at">mean =</span> <span class="dv">16</span>, <span class="at">sd =</span> <span class="fl">0.8</span>),<span class="dv">0</span>),</span>
+<span id="annotated-cell-2-5"><a href="#annotated-cell-2-5" aria-hidden="true" tabindex="-1"></a>           <span class="fu">round</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">30</span>, <span class="at">mean =</span> <span class="dv">12</span>, <span class="at">sd =</span> <span class="fl">0.9</span>),<span class="dv">0</span>))</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-2-6" class="code-annotation-target"><a href="#annotated-cell-2-6" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Group, Score)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-2-7" class="code-annotation-target"><a href="#annotated-cell-2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="1" data-code-annotation="1">Group is a two-level factor variable, (“gl” = “generate levels”)</span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="2" data-code-annotation="2">with 30 observations for each level,</span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="3" data-code-annotation="3">which we label “control” and “treat”,</span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="4,5" data-code-annotation="4">we create a numeric vector Score based on two samples of 30 observations from two normal distributions. The observations are rounded,</span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="5">5</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="6" data-code-annotation="5">combine the vectors into a dataframe structure,</span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="6">6</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="7" data-code-annotation="6">and examine the first six rows.</span>
+</dd>
+</dl>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Group Score
+1 control    15
+2 control    16
+3 control    17
+4 control    16
+5 control    15
+6 control    16</code></pre>
+</div>
+</div>
+<p>You can look at the full dataset in a separate window via <code>View()</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>You can edit the dataframe in a spreadsheetlike manner via <code>edit()</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">edit</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>You can actually create a dataframe from scratch with:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df_2 <span class="ot">&lt;-</span> <span class="fu">edit</span>(<span class="fu">data.frame</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="r-datasets" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="r-datasets"><span class="header-section-number">2.3</span> R datasets</h2>
+<p>Base-R and other packages have built-in datasets.</p>
+<p>Simply writing the name and running the code opens the <code>sleep</code> dataset:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sleep</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   extra group ID
+1    0.7     1  1
+2   -1.6     1  2
+3   -0.2     1  3
+4   -1.2     1  4
+5   -0.1     1  5
+6    3.4     1  6
+7    3.7     1  7
+8    0.8     1  8
+9    0.0     1  9
+10   2.0     1 10
+11   1.9     2  1
+12   0.8     2  2
+13   1.1     2  3
+14   0.1     2  4
+15  -0.1     2  5
+16   4.4     2  6
+17   5.5     2  7
+18   1.6     2  8
+19   4.6     2  9
+20   3.4     2 10</code></pre>
+</div>
+</div>
+<p>The <code>sleep</code> dataset contains three variables:</p>
+<ul>
+<li><code>extra</code>: the number of extra hours of sleep after taking a sleep medication,</li>
+<li><code>group</code>: two sleep medications were tested by 10 participants,</li>
+<li><code>ID</code>: an identification number for each participant (not for each row!).</li>
+</ul>
+<p>We can view the structure of a dataframe using <code>str()</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(sleep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   20 obs. of  3 variables:
+ $ extra: num  0.7 -1.6 -0.2 -1.2 -0.1 3.4 3.7 0.8 0 2 ...
+ $ group: Factor w/ 2 levels "1","2": 1 1 1 1 1 1 1 1 1 1 ...
+ $ ID   : Factor w/ 10 levels "1","2","3","4",..: 1 2 3 4 5 6 7 8 9 10 ...</code></pre>
+</div>
+</div>
+<p><code>extra</code> is a numeric variable (a number with decimal places). <code>group</code> and <code>ID</code> are factors, categorical variables with 2 and 10 possible values, respectively. The output for the factor variables can be interpreted as follows:</p>
+<p><code>$ group: Factor w/ 2 levels "1", "2": 1 1 1 ...</code></p>
+<p>“1” and “2” are the names of the levels, which R converts into numerical values, 1 and 2.</p>
+<p>Thus, 1 1 1 in the output above indicates that the first three values of the variable are “1”. The levels are arranged alphabetically by R, unless specified otherwise.</p>
+<p>Which datasets are included in base-r?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>For more information on the dataset sleep use:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(<span class="st">"sleep"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="opening-a-text-file-as-a-dataframe" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="opening-a-text-file-as-a-dataframe"><span class="header-section-number">2.4</span> Opening a Text File as a Dataframe</h2>
+<p>As mentioned already, it is very uncommon to create a dataset directly in R. Researchers typically use a spreadsheet application such as MS Excel to prepare the data first. For very large datasets, a relational database might be used. Sometimes researchers us specialized software, such as PRAAT or ELAN for specific types of data. After data collection, cleaning, and annotation, the data is typically saved as a text file (.csv or .txt file).</p>
+<p>In a .txt file, tabs are used as delimiters, whereas for a .csv file, a comma (“,”) or semicolon (;) is used as delimiters (a delimiter is a symbol that indicates the separation between columns).</p>
+<p>By way of example we open a .csv-file from De latte <span class="citation" data-cites="delatte2023">(<a href="references.html#ref-delatte2023" role="doc-biblioref">2023</a>)</span>. The file is published in the online repository <strong>TROLLing</strong> (<a href="https://dataverse.no/dataverse/trolling/" class="uri">https://dataverse.no/dataverse/trolling/</a>). Here is the dataset abstract.</p>
+<blockquote class="blockquote">
+<p>This dataset contains one datafile (.csv) used to create the graphs and tables in the paper “(Im)polite uses of vocatives in present-day Madrilenian Spanish”. It includes 534 Spanish vocative tokens, i.e.&nbsp;(pro)nominal terms of direct address (e.g., tío ‘dude’), which were retrieved from CORMA, a conversational corpus of peninsular Spanish compiled between 2016 and 2019. The data is annotated for (i) form, (ii) communication, (iii) semantic category, (iv) speaker’s generation, (v) speaker’s gender, (vi) relationship between speaker and hearer, (vii) socio-pragmatic character of the hosting speech act, (viii) the hearer’s reaction, and (ix) the vocative’s socio-pragmatic effect.</p>
+</blockquote>
+<p>Before you can import the data in R, you need to download the data first and store the data file in a folder/directory (you might want to create a new folder first - and remember the name and the location of this folder!).</p>
+<p>Then you assign this folder as your “working directory”, which is the directory or folder where you keep all the files related to a particular project.</p>
+<p>Your current working directory can be found via <code>getwd()</code>. You change your working directory with <code>setwd()</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># "C:/Users/lfdcuype/Documents"</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"C:/Users/lfdcuype/MILS_Module_1"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>When your R-script and data file have been stored in the same folder which has been set as the working directory, you can use the <code>read.csv()</code> function to open the .csv-file, as follows:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-11"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-11-1" class="code-annotation-target"><a href="#annotated-cell-11-1" aria-hidden="true" tabindex="-1"></a>vocative <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"dataset_ImPoliteVocatives_20230530.csv"</span>,</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-11-2" class="code-annotation-target"><a href="#annotated-cell-11-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sep=</span><span class="st">";"</span>,</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-11-3" class="code-annotation-target"><a href="#annotated-cell-11-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">stringsAsFactors=</span><span class="cn">TRUE</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-11" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="1" data-code-annotation="1">The name of the data file (note the quotation marks),</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="2" data-code-annotation="2">“;” is the delimiter (the symbols that distinguishes the columns),</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="3" data-code-annotation="3">strings are interpreted as factors.</span>
+</dd>
+</dl>
+</div>
+</div>
+<p>Actually, there are different ways to import a data file in R.</p>
+<p>My favourite way - and arguably the easiest one - is by means of the Import dataset function in the Environment tab in RStudio, shown in <a href="#fig-importrstudio" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>:</p>
+<div id="fig-importrstudio" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-importrstudio-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="importrstudio.PNG" class="img-fluid figure-img" width="320">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-importrstudio-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.1: Import in RStudio
+</figcaption>
+</figure>
+</div>
+<p>After you imported the dataset in R, go the the History tab and copy-paste the R-function that was automatically created when you imported the data through the RStudio dialogue to your R-scipt or notebook.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Import Data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Put your data and R-script/Notebook in the same folder. Use Import Dataset and copy the R-function from History to your R-script/Notebook.</p>
+</div>
+</div>
+</section>
+<section id="exploring-a-dataframe" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="exploring-a-dataframe"><span class="header-section-number">2.5</span> Exploring a dataframe</h2>
+<p>There are several basic functions that I always use to explore a new dataset. First, I like to explore the different variables by means of <code>str()</code>, which offers basic overview of the data structure(s)</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(sleep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   20 obs. of  3 variables:
+ $ extra: num  0.7 -1.6 -0.2 -1.2 -0.1 3.4 3.7 0.8 0 2 ...
+ $ group: Factor w/ 2 levels "1","2": 1 1 1 1 1 1 1 1 1 1 ...
+ $ ID   : Factor w/ 10 levels "1","2","3","4",..: 1 2 3 4 5 6 7 8 9 10 ...</code></pre>
+</div>
+</div>
+<p>Or, I start by having a look at the names of the variables:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(sleep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "extra" "group" "ID"   </code></pre>
+</div>
+</div>
+<p>How many rows and columns are there?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(sleep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 20  3</code></pre>
+</div>
+</div>
+<p>Every data analysis should start with a univariate summary of all variables.</p>
+<p>A handy function is <code>summary()</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sleep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     extra        group        ID   
+ Min.   :-1.600   1:10   1      :2  
+ 1st Qu.:-0.025   2:10   2      :2  
+ Median : 0.950          3      :2  
+ Mean   : 1.540          4      :2  
+ 3rd Qu.: 3.400          5      :2  
+ Max.   : 5.500          6      :2  
+                         (Other):8  </code></pre>
+</div>
+</div>
+<p>I also like to eyeball the first and last rows of the dataset.</p>
+<p>The first six rows of the dataset:</p>
+<pre class="{r} head(sleep)}"><code></code></pre>
+<p>And the last six rows:</p>
+<pre class="{r} tail(sleep)}"><code></code></pre>
+<p>Other descriptive functions can be found in specific packages.</p>
+<p>Here’s the <code>describe()</code> from the <code>Hmisc</code> package <span class="citation" data-cites="Hmisc">(<a href="references.html#ref-Hmisc" role="doc-biblioref">Harrell Jr 2023</a>)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Hmisc)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(sleep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>sleep 
+
+ 3  Variables      20  Observations
+--------------------------------------------------------------------------------
+extra 
+       n  missing distinct     Info     Mean  pMedian      Gmd      .05 
+      20        0       17    0.998     1.54      1.5    2.332   -1.220 
+     .10      .25      .50      .75      .90      .95 
+  -0.300   -0.025    0.950    3.400    4.420    4.645 
+                                                                           
+Value      -1.6 -1.2 -0.2 -0.1  0.0  0.1  0.7  0.8  1.1  1.6  1.9  2.0  3.4
+Frequency     1    1    1    2    1    1    1    2    1    1    1    1    2
+Proportion 0.05 0.05 0.05 0.10 0.05 0.05 0.05 0.10 0.05 0.05 0.05 0.05 0.10
+                              
+Value       3.7  4.4  4.6  5.5
+Frequency     1    1    1    1
+Proportion 0.05 0.05 0.05 0.05
+--------------------------------------------------------------------------------
+group 
+       n  missing distinct 
+      20        0        2 
+                  
+Value        1   2
+Frequency   10  10
+Proportion 0.5 0.5
+--------------------------------------------------------------------------------
+ID 
+       n  missing distinct 
+      20        0       10 
+                                                  
+Value        1   2   3   4   5   6   7   8   9  10
+Frequency    2   2   2   2   2   2   2   2   2   2
+Proportion 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+--------------------------------------------------------------------------------</code></pre>
+</div>
+</div>
+</section>
+<section id="applying-functions-to-a-variable-from-a-dataframe" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="applying-functions-to-a-variable-from-a-dataframe"><span class="header-section-number">2.6</span> Applying functions to a variable from a dataframe</h2>
+<p>Let’s tabulate the variable <code>group</code> from <code>sleep</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(sleep<span class="sc">$</span>group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ 1  2 
+10 10 </code></pre>
+</div>
+</div>
+<p>All the functions outlined earlier can be applied to variables of a dataframe. For instance, here’s some code to create a boxplot of the variabele <code>extra</code> as in <a href="#fig-h2-boxplot" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(sleep<span class="sc">$</span>extra)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-h2-boxplot" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-h2-boxplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="H2_Dataframe_files/figure-html/fig-h2-boxplot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-h2-boxplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2: A boxplot of the variable extra from sleep.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To avoid the use of “DATAFRAME$”, you can use the <code>attach()</code> function. And when you’re done you use the detach() function. It simplifies the code, but if you work with multiple dataframes, you run the risk of loosing track of what you attached.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">attach</span>(sleep)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(extra)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="H2_Dataframe_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detach</span>(sleep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+<section id="selectingsubsetting-data-from-a-dataframe" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="selectingsubsetting-data-from-a-dataframe"><span class="header-section-number">2.7</span> Selecting/subsetting data from a dataframe</h2>
+<p>The index function with the square brackets also works on dataframes. Dataframes have rows and columns and so the index function involves two dimensions.</p>
+<p>We extract the first four rows from <code>sleep</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sleep[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  extra group ID
+1   0.7     1  1
+2  -1.6     1  2
+3  -0.2     1  3
+4  -1.2     1  4</code></pre>
+</div>
+</div>
+<p>We extract all rows for which there is a positive extra amount of sleep.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>sleep[sleep<span class="sc">$</span>extra<span class="sc">&gt;</span><span class="dv">0</span>,]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   extra group ID
+1    0.7     1  1
+6    3.4     1  6
+7    3.7     1  7
+8    0.8     1  8
+10   2.0     1 10
+11   1.9     2  1
+12   0.8     2  2
+13   1.1     2  3
+14   0.1     2  4
+16   4.4     2  6
+17   5.5     2  7
+18   1.6     2  8
+19   4.6     2  9
+20   3.4     2 10</code></pre>
+</div>
+</div>
+<p>Notice the dollar sign “$”. With the dollar sign a variable is selected from a dataframe.</p>
+<p>What is the average amount of extra sleep?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(sleep<span class="sc">$</span>extra, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.54</code></pre>
+</div>
+</div>
+<p>Another way to select data is via de <code>subset()</code> function. Here we create a new dataframe <code>sleep_drug1</code> by selecting the control group from the <code>sleep</code> dataset.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-24"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-24" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-24-1" class="code-annotation-target"><a href="#annotated-cell-24-1" aria-hidden="true" tabindex="-1"></a>sleep_drug1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(sleep,</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-24" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-24-2" class="code-annotation-target"><a href="#annotated-cell-24-2" aria-hidden="true" tabindex="-1"></a>                    group<span class="sc">==</span><span class="st">"1"</span>)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-24" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-24-3" class="code-annotation-target"><a href="#annotated-cell-24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sleep_drug1)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-24" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-24" data-code-lines="1" data-code-annotation="1">“sleep_drug1” is the name of the new dataset, and we take a subset from sleep,</span>
+</dd>
+<dt data-target-cell="annotated-cell-24" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-24" data-code-lines="2" data-code-annotation="2">the selection, here group with level 1,</span>
+</dd>
+<dt data-target-cell="annotated-cell-24" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-24" data-code-lines="3" data-code-annotation="3">a summary of the new dataframe.</span>
+</dd>
+</dl>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     extra        group        ID   
+ Min.   :-1.600   1:10   1      :1  
+ 1st Qu.:-0.175   2: 0   2      :1  
+ Median : 0.350          3      :1  
+ Mean   : 0.750          4      :1  
+ 3rd Qu.: 1.700          5      :1  
+ Max.   : 3.700          6      :1  
+                         (Other):4  </code></pre>
+</div>
+</div>
+<p>Here’s a more complex subset with two criteria:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-25"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-25-1"><a href="#annotated-cell-25-1" aria-hidden="true" tabindex="-1"></a>sleep_2 <span class="ot">&lt;-</span> <span class="fu">subset</span>(sleep,                      </span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-25" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-25-2" class="code-annotation-target"><a href="#annotated-cell-25-2" aria-hidden="true" tabindex="-1"></a>                    group<span class="sc">==</span><span class="st">"1"</span> <span class="sc">&amp;</span> extra<span class="sc">&gt;</span><span class="dv">0</span>)</span>
+<span id="annotated-cell-25-3"><a href="#annotated-cell-25-3" aria-hidden="true" tabindex="-1"></a>sleep_2</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-25" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-25" data-code-lines="2" data-code-annotation="1">the first group that also slept longer (“extra” = increase in hours of sleep)</span>
+</dd>
+</dl>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   extra group ID
+1    0.7     1  1
+6    3.4     1  6
+7    3.7     1  7
+8    0.8     1  8
+10   2.0     1 10</code></pre>
+</div>
+</div>
+<p>Important: when you take a subset, the original levels remain:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sleep_drug1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     extra        group        ID   
+ Min.   :-1.600   1:10   1      :1  
+ 1st Qu.:-0.175   2: 0   2      :1  
+ Median : 0.350          3      :1  
+ Mean   : 0.750          4      :1  
+ 3rd Qu.: 1.700          5      :1  
+ Max.   : 3.700          6      :1  
+                         (Other):4  </code></pre>
+</div>
+</div>
+<p>Use the <code>droplevels()</code> to remove unselected levels.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>sleep_drug1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(sleep,             </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                    group<span class="sc">==</span><span class="st">"1"</span>)      </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>sleep_drug1 <span class="ot">&lt;-</span> <span class="fu">droplevels</span>(sleep_drug1)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sleep_drug1)                     </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     extra        group        ID   
+ Min.   :-1.600   1:10   1      :1  
+ 1st Qu.:-0.175          2      :1  
+ Median : 0.350          3      :1  
+ Mean   : 0.750          4      :1  
+ 3rd Qu.: 1.700          5      :1  
+ Max.   : 3.700          6      :1  
+                         (Other):4  </code></pre>
+</div>
+</div>
+</section>
+<section id="creating-a-new-variable" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="creating-a-new-variable"><span class="header-section-number">2.8</span> Creating a new variable</h2>
+<p>We calculate a z-score for <code>extra</code> in the sleep data. The dollar sign (“$”) is used to add the variable to the existing dataframe.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>sleep<span class="sc">$</span>extra_z <span class="ot">&lt;-</span> (sleep<span class="sc">$</span>extra<span class="sc">-</span><span class="fu">mean</span>(sleep<span class="sc">$</span>extra))<span class="sc">/</span><span class="fu">sd</span>(sleep<span class="sc">$</span>extra)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sleep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  extra group ID    extra_z
+1   0.7     1  1 -0.4162703
+2  -1.6     1  2 -1.5560579
+3  -0.2     1  3 -0.8622741
+4  -1.2     1  4 -1.3578340
+5  -0.1     1  5 -0.8127182
+6   3.4     1  6  0.9217413</code></pre>
+</div>
+</div>
+<p>Note that if you do not use the dollar sign, you create a new vector without adding it as a variable to the sleep dataset.</p>
+</section>
+<section id="tapply" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="tapply"><span class="header-section-number">2.9</span> tapply()</h2>
+<p>This is a convenient function to compare different groups in your data. For instance, here we calculate the average extra time of sleep for both groups.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-29"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-29-1" class="code-annotation-target"><a href="#annotated-cell-29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(<span class="at">X =</span> sleep<span class="sc">$</span>extra,</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-29-2" class="code-annotation-target"><a href="#annotated-cell-29-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">INDEX =</span> sleep<span class="sc">$</span>group,</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-29-3" class="code-annotation-target"><a href="#annotated-cell-29-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">FUN =</span> mean)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-29" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-29" data-code-lines="1" data-code-annotation="1">The variable on which we wish to apply the function in 3,</span>
+</dd>
+<dt data-target-cell="annotated-cell-29" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-29" data-code-lines="2" data-code-annotation="2">the categorical variable to split the data,</span>
+</dd>
+<dt data-target-cell="annotated-cell-29" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-29" data-code-lines="3" data-code-annotation="3">the function to apply to 1.</span>
+</dd>
+</dl>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   1    2 
+0.75 2.33 </code></pre>
+</div>
+</div>
+<p>So <code>Group</code> number 1 has an average extra sleeping time of <span class="math inline">\(0.75\)</span> hours, while Group number 2 has an average extra sleeping time of <span class="math inline">\(2.33\)</span> hours.</p>
+</section>
+<section id="save-a-dataframe-as-a-datafile" class="level2" data-number="2.10">
+<h2 data-number="2.10" class="anchored" data-anchor-id="save-a-dataframe-as-a-datafile"><span class="header-section-number">2.10</span> Save a dataframe as a datafile</h2>
+<p>After you create a dataframe “df”, you can save it as a .csv-file with <code>write.csv</code> or <code>write.csv2</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv2</span>(df, <span class="at">file =</span> <span class="st">"df.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><p><code>.csv2</code> uses a semicolon (“;”) as a delimiter and a comma (“,”) for the decimal point.</p></li>
+<li><p><code>csv</code> uses a comma (“,”) as a delimiter and a full stop (“.”) for the decimal point.</p></li>
+</ul>
+<p>If you prefer a tab delimited txt file, use:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|eval: false</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(df, <span class="at">file =</span> <span class="st">"df.txt"</span>, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>,</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="exercises" class="level2" data-number="2.11">
+<h2 data-number="2.11" class="anchored" data-anchor-id="exercises"><span class="header-section-number">2.11</span> Exercises</h2>
+<section id="exercise-2.1" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="exercise-2.1"><strong>Exercise 2.1</strong></h3>
+<ol type="1">
+<li>Create a new folder in your basic “Documents” folder. Give this folder a simple name and remember the location of this new folder.</li>
+<li>Open a new R-script and set the new folder as your working directory</li>
+<li>Create a small mock-dataset in Excel with three variables and five rows, as in <a href="#fig-H2-fakeexcel" class="quarto-xref">Figure&nbsp;<span>2.3</span></a>:</li>
+</ol>
+<div id="fig-H2-fakeexcel" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-H2-fakeexcel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="FakeData.JPG" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-H2-fakeexcel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.3: FakeData as a test dataset in MS Excel
+</figcaption>
+</figure>
+</div>
+<ol start="4" type="1">
+<li>Save the file as a .txt-file (FakeData.txt, cf. <a href="#fig-H2-savetxt" class="quarto-xref">Figure&nbsp;<span>2.4</span></a>) in the working directory.</li>
+</ol>
+<div id="fig-H2-savetxt" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-H2-savetxt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="save-txt-file.JPG" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-H2-savetxt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.4: Save the Excel file as a tab-delimited text file
+</figcaption>
+</figure>
+</div>
+<ol start="5" type="1">
+<li>Open the dataset in R with <code>read.delim()</code>.</li>
+<li>What are the names of the variables?</li>
+<li>Give a univariate summary of every variable.</li>
+</ol>
+</section>
+<section id="exercise-2.2" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="exercise-2.2"><strong>Exercise 2.2</strong></h3>
+<ol type="1">
+<li>Open the <code>multitask</code> dataset, which we created in Activity 1, and give the dataframe the name “multi”.</li>
+<li>Give a univariate summary of all variables.</li>
+<li>Use <code>tapply()</code> to calculate the median Time for both Tasks.</li>
+<li>Take a subset of the simultaneous task.</li>
+<li>Visualize this subset by means of a histogram.</li>
+<li>Create a new variable <code>Time_c</code> by subtracting every observation for the Variable <code>Time</code> from its mean. (this is called centering the data, hence the use of “_c”).</li>
+</ol>
+</section>
+<section id="exercise-2.3" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="exercise-2.3"><strong>Exercise 2.3</strong></h3>
+<ol type="1">
+<li>Download &amp; Open <code>Listening_to_Accents_Comprehensibility_Accentedness.csv</code>. Give the dataframe the name “comp”.</li>
+<li>Visualise <code>Comprehensibility</code> by means of a barplot and a histogram.</li>
+<li>How many observations are there for every <code>Accent</code>?</li>
+<li>Visualize <code>Accent</code> with a piechart. (check <code>help("pie")</code>).</li>
+<li>Create a new Variable in which you bin the Accent levels into two or three groups.</li>
+</ol>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-delatte2023" class="csl-entry" role="listitem">
+De Latte, Fien. 2023. <span>“Replication Data for: (Im)polite Uses of Vocatives in Present-Day Madrilenian Spanish.”</span> DataverseNO. <a href="https://doi.org/10.18710/FOBMUQ">https://doi.org/10.18710/FOBMUQ</a>.
+</div>
+<div id="ref-Hmisc" class="csl-entry" role="listitem">
+Harrell Jr, Frank E. 2023. <span>“Hmisc: Harrell Miscellaneous.”</span> <a href="https://CRAN.R-project.org/package=Hmisc">https://CRAN.R-project.org/package=Hmisc</a>.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            // default icon
+            link.classList.add("external");
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./H1_Basics.html" class="pagination-link" aria-label="R basics">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">R basics</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./H3_Tidyverse.html" class="pagination-link" aria-label="Tidyverse">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Tidyverse</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
