@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 book:
-  title: "R for Statistical Data Analysis"
+  title: "Intro to R"
   subtitle: "A Beginner's Guide for Linguists"
   author: 
   - name: Ludovic De Cuypere
@@ -11,7 +11,6 @@ book:
     email: Ludovic.DeCuypere@UGent.be
     affiliation: 
       - name: Ghent University - Vrije Universiteit Brussel
-  sharing: [twitter, facebook, linkedin]
   chapters:
     - index.qmd
     - H1_Basics.qmd
