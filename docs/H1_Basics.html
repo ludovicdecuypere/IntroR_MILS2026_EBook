@@ -77,7 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-19109c0945e63930d9b3070ed5ef4b77.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0c3d6a73b3f2c837b212064ac5b06e4a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -834,7 +834,7 @@ citing R packages.</code></pre>
 </dl>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 12 89 56 33 78</code></pre>
+<pre><code>[1] 12 34 33 34 56</code></pre>
 </div>
 </div>
 <p>We could also sample with replacement:</p>
@@ -844,8 +844,8 @@ citing R packages.</code></pre>
 <span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">size =</span> <span class="dv">20</span>, </span>
 <span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] "head" "tail" "tail" "tail" "head" "head" "head" "head" "head" "head"
-[11] "head" "tail" "head" "head" "tail" "tail" "tail" "head" "head" "head"</code></pre>
+<pre><code> [1] "head" "tail" "tail" "tail" "head" "tail" "head" "tail" "tail" "head"
+[11] "head" "head" "tail" "tail" "head" "head" "tail" "head" "head" "head"</code></pre>
 </div>
 </div>
 <p>Here we simulate tossing a coin twenty times. There are two possible events: head or tail. Both have an equal probability (<span class="math inline">\(50\%\)</span>). Suppose that we have a binary outcome variable or the outcome of an process that generates two possible events of which one event is taken to occur with a <span class="math inline">\(70\%\)</span> probability. We can simulate this by adapting the argument <code>prob</code>:</p>
@@ -856,7 +856,7 @@ citing R packages.</code></pre>
 <span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.30</span>, <span class="fl">0.70</span>), </span>
 <span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">replace=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 1 1 1 1 0 0 0 1 1 1 0 1 1 1 1 1 1 0 1 1</code></pre>
+<pre><code> [1] 0 0 1 1 0 1 0 0 1 1 1 1 1 1 0 0 1 0 1 1</code></pre>
 </div>
 </div>
 <p>With <code>rnorm()</code> we can draw a random sample from a normal distribution. We draw a random sample of <span class="math inline">\(N=200\)</span> observations from a normal distribution with mean <span class="math inline">\(\mu=4.5\)</span> and standard deviation <span class="math inline">\(\sigma=2\)</span>.</p>
@@ -881,10 +881,9 @@ citing R packages.</code></pre>
 </dl>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1]  2.7336005  0.4778472  3.2804652  3.1607356  5.5892156  1.7503692
- [7]  3.4420040  2.4858338  5.3063588  3.7779883  6.8010096 -0.1601720
-[13]  4.9541670  7.4985882  1.7230527  7.1020480  5.9626561  5.6270932
-[19]  4.5766677  3.7732187</code></pre>
+<pre><code> [1] 7.752833 5.416940 4.736653 5.990600 3.164721 1.639255 5.249358 7.148488
+ [9] 2.942229 4.148559 7.439103 4.710939 2.591532 4.788862 5.670000 6.631390
+[17] 5.048252 5.270850 3.694457 5.038529</code></pre>
 </div>
 </div>
 </section>
@@ -1270,8 +1269,8 @@ Figure&nbsp;1.9: A scatterplot of Pre- and Posttest scores with a regression lin
 <li><p>Use a function to find help on the <code>mean()</code> function</p></li>
 <li><p>R contains several datasets which are loaded automatically.</p>
 <ol type="a">
-<li>Open the dataset <code>TootGrowth</code>.</li>
-<li>Assign the name <code>tg</code> to the dataset <code>Tootgrowth</code>.</li>
+<li>Open the dataset <code>ToothGrowth</code>.</li>
+<li>Assign the name <code>tg</code> to the dataset <code>ToothGrowth</code>.</li>
 <li>How many variables does <code>tg</code> have? (tip: use <code>str()</code>)</li>
 </ol></li>
 </ol>

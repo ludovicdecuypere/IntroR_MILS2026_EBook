@@ -5,6 +5,8 @@ project:
 book:
   title: "Intro to R"
   subtitle: "A Beginner's Guide for Linguists"
+  date: 2026-04-15
+  date-format: long
   author: 
   - name: Ludovic De Cuypere
     id: LDC
